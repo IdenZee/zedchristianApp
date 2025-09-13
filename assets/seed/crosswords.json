@@ -1,0 +1,66 @@
+[
+  {
+    "clue": "Builder of an ark",
+    "answer": "NOAH",
+    "orientation": "across",
+    "row_start": 0,
+    "col_start": 0,
+    "puzzle_set": "Set A"
+  },
+  {
+    "clue": "Sea Moses parted",
+    "answer": "REDSEA",
+    "orientation": "down",
+    "row_start": 0,
+    "col_start": 3,
+    "puzzle_set": "Set A"
+  },
+  {
+    "clue": "Garden home of Adam",
+    "answer": "EDEN",
+    "orientation": "across",
+    "row_start": 2,
+    "col_start": 1,
+    "puzzle_set": "Set A"
+  },
+  {
+    "clue": "Boy who defeated Goliath",
+    "answer": "DAVID",
+    "orientation": "down",
+    "row_start": 1,
+    "col_start": 4,
+    "puzzle_set": "Set A"
+  },
+  {
+    "clue": "Birthplace of Jesus",
+    "answer": "BETHLEHEM",
+    "orientation": "across",
+    "row_start": 0,
+    "col_start": 0,
+    "puzzle_set": "Set B"
+  },
+  {
+    "clue": "River of Jesus' baptism",
+    "answer": "JORDAN",
+    "orientation": "down",
+    "row_start": 0,
+    "col_start": 2,
+    "puzzle_set": "Set B"
+  },
+  {
+    "clue": "Holy city of the Temple",
+    "answer": "JERUSALEM",
+    "orientation": "down",
+    "row_start": 0,
+    "col_start": 5,
+    "puzzle_set": "Set B"
+  },
+  {
+    "clue": "Where Jesus grew up",
+    "answer": "NAZARETH",
+    "orientation": "across",
+    "row_start": 3,
+    "col_start": 1,
+    "puzzle_set": "Set B"
+  }
+]

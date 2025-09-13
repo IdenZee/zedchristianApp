@@ -1,0 +1,62 @@
+[
+  {
+    "id": "q1",
+    "question": "Who built the ark?",
+    "options": [
+      "Moses",
+      "Noah",
+      "Abraham",
+      "David"
+    ],
+    "answerIndex": 1,
+    "category": "People"
+  },
+  {
+    "id": "q2",
+    "question": "Where was Jesus born?",
+    "options": [
+      "Nazareth",
+      "Jerusalem",
+      "Bethlehem",
+      "Capernaum"
+    ],
+    "answerIndex": 2,
+    "category": "Places"
+  },
+  {
+    "id": "q3",
+    "question": "How many disciples did Jesus have?",
+    "options": [
+      "10",
+      "11",
+      "12",
+      "13"
+    ],
+    "answerIndex": 2,
+    "category": "Numbers"
+  },
+  {
+    "id": "q4",
+    "question": "Who defeated Goliath?",
+    "options": [
+      "Saul",
+      "David",
+      "Samson",
+      "Solomon"
+    ],
+    "answerIndex": 1,
+    "category": "People"
+  },
+  {
+    "id": "q5",
+    "question": "What is the last book of the Bible?",
+    "options": [
+      "Jude",
+      "Revelation",
+      "Acts",
+      "Malachi"
+    ],
+    "answerIndex": 1,
+    "category": "Books"
+  }
+]

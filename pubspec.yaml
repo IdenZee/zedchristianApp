@@ -1,0 +1,33 @@
+name: faith_fun
+description: A fun, offline-first Flutter app with quizzes, crosswords, picture puzzles, games, and a verse slider.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  provider: ^6.0.5
+  http: ^1.2.2
+  connectivity_plus: ^6.0.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  url_launcher: ^6.3.0
+  collection: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/seed/quizzes.json
+    - assets/seed/verses.json
+    - assets/seed/crosswords.json
+    - assets/seed/pictures.json
