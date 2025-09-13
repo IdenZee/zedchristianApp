@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../models/quiz.dart';
 import '../../models/verse.dart';
@@ -17,50 +17,59 @@ class LocalStore {
     await Hive.openBox(quizzesBox);
     await Hive.openBox(versesBox);
     await Hive.openBox(crossBox);
+  }
 
-    // Seed only once
-    final meta = Hive.box(metaBox);
-    if (!(meta.get('seeded') == false)) {
-      await _seedFromAssets();
-      await meta.put('seeded', true);
-      await meta.put('lastSync', DateTime.now().toIso8601String());
+  // --- SYNC FUNCTIONS ---
+
+  static Future<void> syncCrosswords() async {
+    final url = Uri.parse("http://10.0.2.2/zedchristian/api/crosswords.php");
+    await _syncBox(url, crossBox);
+  }
+
+  static Future<void> syncQuizzes() async {
+    final url = Uri.parse("http://10.0.2.2/zedchristian/api/quizzes.php");
+    await _syncBox(url, quizzesBox);
+  }
+
+  static Future<void> syncVerses() async {
+    final url = Uri.parse("http://10.0.2.2/zedchristian/api/verses.php");
+    await _syncBox(url, versesBox);
+  }
+
+  static Future<void> _syncBox(Uri url, String boxName) async {
+    try {
+      final res = await http.get(url);
+      if (res.statusCode == 200) {
+        final List data = json.decode(res.body);
+        final box = Hive.box(boxName);
+        await box.clear();
+        for (int i = 0; i < data.length; i++) {
+          await box.put(i.toString(), data[i]);
+        }
+        print("Synced $boxName: ${data.length}");
+      } else {
+        print("Failed to sync $boxName: ${res.statusCode}");
+      }
+    } catch (e) {
+      print("Error syncing $boxName: $e");
     }
   }
 
-  static Future<void> _seedFromAssets() async {
-    final qb = Hive.box(quizzesBox);
-    final vb = Hive.box(versesBox);
-    final cb = Hive.box(crossBox);
+  // --- QUERIES ---
 
-    final quizzes = json.decode(await rootBundle.loadString('assets/seed/quizzes.json')) as List;
-    for (final q in quizzes) {
-      final id = q['id'];
-      await qb.put(id, q);
-    }
-
-    final verses = json.decode(await rootBundle.loadString('assets/seed/verses.json')) as List;
-    for (final v in verses) {
-      await vb.put(v['id'], v);
-    }
-
-    final crosswords = json.decode(await rootBundle.loadString('assets/seed/crosswords.json')) as List;
-    int i=0;
-    for (final c in crosswords) {
-      await cb.put((i++).toString(), c);
-    }
-    print(crosswords);
-  }
-
-  // Queries
   static List<QuizQuestion> getAllQuizzes() {
     final qb = Hive.box(quizzesBox);
-    return qb.values.map((e) => QuizQuestion.fromJson(Map<String, dynamic>.from(e))).toList();
+    return qb.values
+        .map((e) => QuizQuestion.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
   }
 
   static List<Verse> getAllVerses() {
     final vb = Hive.box(versesBox);
-    return vb.values.map((e) => Verse.fromJson(Map<String, dynamic>.from(e))).toList();
-    }
+    return vb.values
+        .map((e) => Verse.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
 
   static Map<String, List<CrosswordEntry>> getCrosswordsBySet() {
     final cb = Hive.box(crossBox);

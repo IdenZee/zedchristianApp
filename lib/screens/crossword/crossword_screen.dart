@@ -15,6 +15,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
 
   late List<List<String?>> solutionGrid;
   late List<List<TextEditingController?>> inputGrid;
+  late List<List<FocusNode?>> focusGrid;
 
   final Map<String, int> _startNumbers = {};
   List<_Clue> _acrossClues = [];
@@ -44,6 +45,11 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
           ctrl?.dispose();
         }
       }
+      for (final row in focusGrid) {
+        for (final f in row) {
+          f?.dispose();
+        }
+      }
     } catch (_) {}
   }
 
@@ -53,6 +59,8 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
 
     solutionGrid = List.generate(rows, (_) => List.generate(cols, (_) => null));
     inputGrid = List.generate(rows, (_) => List.generate(cols, (_) => null));
+    focusGrid = List.generate(rows, (_) => List.generate(cols, (_) => null));
+
     _startNumbers.clear();
     _acrossClues = [];
     _downClues = [];
@@ -71,6 +79,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
         if (existing == null || existing == ch) {
           solutionGrid[r][c] = ch;
           inputGrid[r][c] ??= TextEditingController();
+          focusGrid[r][c] ??= FocusNode();
         }
       }
     }
@@ -173,6 +182,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
                     final c = i % cols;
                     final sol = solutionGrid[r][c];
                     final ctrl = inputGrid[r][c];
+                    final focus = focusGrid[r][c];
 
                     if (sol == null) {
                       // Blocked cell
@@ -219,6 +229,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
                           Center(
                             child: TextField(
                               controller: ctrl,
+                              focusNode: focus,
                               maxLength: 1, // restrict to single character
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -238,6 +249,21 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
                                 ctrl.selection = TextSelection.fromPosition(
                                   TextPosition(offset: ctrl.text.length),
                                 );
+
+                                if (up.isNotEmpty) {
+                                  // Default move right
+                                  int nr = r, nc = c + 1;
+                                  // If this cell starts a down word, prefer moving down
+                                  if (_downClues.any((cl) => cl.row == r && cl.col == c)) {
+                                    nr = r + 1;
+                                    nc = c;
+                                  }
+                                  if (nr < rows && nc < cols && focusGrid[nr][nc] != null) {
+                                    FocusScope.of(context).requestFocus(focusGrid[nr][nc]);
+                                  } else {
+                                    FocusScope.of(context).unfocus();
+                                  }
+                                }
                               },
                             ),
                           ),
@@ -246,9 +272,6 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
                     );
                   },
                 ),
-
-
-
               ),
             ),
 
@@ -291,7 +314,6 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
         ),
       ),
     );
-
   }
 }
 
