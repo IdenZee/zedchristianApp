@@ -9,6 +9,7 @@ class CrosswordScreen extends StatefulWidget {
   State<CrosswordScreen> createState() => _CrosswordScreenState();
 }
 
+bool _revealed = false;
 class _CrosswordScreenState extends State<CrosswordScreen> {
   late Map<String, List<CrosswordEntry>> sets;
   String? selectedSet;
@@ -116,20 +117,38 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
     setState(() => _checked = true);
   }
 
-  void _revealPuzzle() {
+  void _toggleRevealPuzzle() {
+
     setState(() {
-      for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-          final sol = solutionGrid[r][c];
-          final ctrl = inputGrid[r][c];
-          if (sol != null && ctrl != null) {
-            ctrl.text = sol;
+      if (_revealed) {
+        // Hide answers → clear user inputs
+        for (int r = 0; r < rows; r++) {
+          for (int c = 0; c < cols; c++) {
+            final sol = solutionGrid[r][c];
+            final ctrl = inputGrid[r][c];
+            if (sol != null && ctrl != null) {
+              ctrl.clear(); // clear input when hiding
+            }
           }
         }
+        _revealed = false;
+      } else {
+        // Reveal answers
+        for (int r = 0; r < rows; r++) {
+          for (int c = 0; c < cols; c++) {
+            final sol = solutionGrid[r][c];
+            final ctrl = inputGrid[r][c];
+            if (sol != null && ctrl != null) {
+              ctrl.text = sol;
+            }
+          }
+        }
+        _revealed = true;
       }
       _checked = false;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -142,6 +161,7 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
         child: Column(
           children: [
             // top controls
+            const SizedBox(height: 12),
             Row(
               children: [
                 const Text('Set:'),
@@ -160,9 +180,15 @@ class _CrosswordScreenState extends State<CrosswordScreen> {
                   },
                 ),
                 const Spacer(),
+
                 ElevatedButton(onPressed: _checkPuzzle, child: const Text('Check')),
                 const SizedBox(width: 8),
-                ElevatedButton(onPressed: _revealPuzzle, child: const Text('Reveal')),
+
+                ElevatedButton(
+                  onPressed: _toggleRevealPuzzle,
+                  child: Text(_revealed ? 'Hide' : 'Reveal'),
+                ),
+
               ],
             ),
             const SizedBox(height: 12),

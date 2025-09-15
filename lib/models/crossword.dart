@@ -19,10 +19,11 @@ class CrosswordEntry {
     clue: j['clue'] ?? '',
     answer: (j['answer'] ?? '').toString().trim().toUpperCase(),
     orientation: (j['orientation'] ?? 'across').toLowerCase(),
-    rowStart: j['row_start'] ?? j['rowStart'] ?? 0,
-    colStart: j['col_start'] ?? j['colStart'] ?? 0,
+    rowStart: int.tryParse(j['row_start']?.toString() ?? j['rowStart']?.toString() ?? '0') ?? 0,
+    colStart: int.tryParse(j['col_start']?.toString() ?? j['colStart']?.toString() ?? '0') ?? 0,
     set: j['puzzle_set'] ?? j['set'] ?? 'Default',
   );
+
 
   Map<String, dynamic> toJson() => {
     'clue': clue,

@@ -59,10 +59,12 @@ class LocalStore {
 
   static List<QuizQuestion> getAllQuizzes() {
     final qb = Hive.box(quizzesBox);
+
     return qb.values
         .map((e) => QuizQuestion.fromJson(Map<String, dynamic>.from(e)))
         .toList();
   }
+
 
   static List<Verse> getAllVerses() {
     final vb = Hive.box(versesBox);

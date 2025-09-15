@@ -3,13 +3,23 @@ class Verse {
   final String text;
   final String reference;
 
-  Verse({required this.id, required this.text, required this.reference});
+  Verse({
+    required this.id,
+    required this.text,
+    required this.reference,
+  });
 
-  factory Verse.fromJson(Map<String, dynamic> j) => Verse(
-    id: j['id'],
-    text: j['text'],
-    reference: j['reference'],
-  );
+  factory Verse.fromJson(Map<String, dynamic> json) {
+    return Verse(
+      id: (json['id'] ?? '').toString(),
+      text: (json['verse_text'] ?? json['text'] ?? '').toString(),
+      reference: (json['reference'] ?? '').toString(),
+    );
+  }
 
-  Map<String, dynamic> toJson() => {'id': id, 'text': text, 'reference': reference};
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'verse_text': text,   // use verse_text for DB
+    'reference': reference,
+  };
 }

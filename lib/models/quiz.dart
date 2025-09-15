@@ -2,7 +2,7 @@ class QuizQuestion {
   final String id;
   final String question;
   final List<String> options;
-  final int answerIndex; // derived from correct_option
+  final int answerIndex;
 
   QuizQuestion({
     required this.id,
@@ -12,10 +12,26 @@ class QuizQuestion {
   });
 
   factory QuizQuestion.fromJson(Map<String, dynamic> json) {
-    // Map correct_option (A/B/C/D) to index
-    final correct = (json['correct_option'] ?? '').toString().toUpperCase();
-    final indexMap = {'A': 0, 'B': 1, 'C': 2, 'D': 3};
-    final ansIndex = indexMap[correct] ?? 0;
+    final correct = (json['correct_option'] as String?)?.trim().toUpperCase();
+
+    // Map A, B, C, D → 0, 1, 2, 3
+    int index;
+    switch (correct) {
+      case 'A':
+        index = 0;
+        break;
+      case 'B':
+        index = 1;
+        break;
+      case 'C':
+        index = 2;
+        break;
+      case 'D':
+        index = 3;
+        break;
+      default:
+        index = 0; // fallback
+    }
 
     return QuizQuestion(
       id: json['id'].toString(),
@@ -26,7 +42,7 @@ class QuizQuestion {
         json['option_c'] ?? '',
         json['option_d'] ?? '',
       ],
-      answerIndex: ansIndex,
+      answerIndex: index,
     );
   }
 
